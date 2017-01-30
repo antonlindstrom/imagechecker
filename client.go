@@ -62,12 +62,8 @@ func (c *Client) linksFromURL(urls []string) []*Link {
 	}
 
 	var links []*Link
-	for i := 0; i < len(urls); {
-		select {
-		case link := <-ch:
-			links = append(links, link)
-			i++
-		}
+	for i := 0; i < len(urls); i++ {
+		links = append(links, <-ch)
 	}
 
 	close(ch)
