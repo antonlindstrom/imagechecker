@@ -8,6 +8,17 @@ import (
 	"golang.org/x/net/html"
 )
 
+// AbsImageURLMap returns a map with image URLs and the corresponding absolute
+// URL.
+func AbsImageURLMap(srcURL string, r io.Reader) map[string]string {
+	images := make(map[string]string, 0)
+	for _, image := range ImageURLs(r) {
+		images[image] = absoluteImagePath(srcURL, image)
+	}
+
+	return images
+}
+
 // AbsImageURLs returns the absolute URL for all images in img tags.
 func AbsImageURLs(srcURL string, r io.Reader) []string {
 	var images []string
