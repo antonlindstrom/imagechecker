@@ -130,7 +130,11 @@ func TestGetImageURL(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		got := getImageURL(test.got)
+		got, ok := getImageURL(test.got)
+		if test.want == "" && ok {
+			t.Errorf("want ok = false, got true")
+		}
+
 		if got != test.want {
 			t.Errorf("want url = %q, got %q", test.want, got)
 		}
@@ -175,6 +179,10 @@ func TestImageURLs(t *testing.T) {
 		{
 			body: strings.NewReader(`<html><body><img data-src="/image.jpeg" /></body></html>`),
 			want: []string{"/image.jpeg"},
+		},
+		{
+			body: strings.NewReader(`<html><body><img src="/image.png"/ width="400"></body></html>`),
+			want: []string{"/image.png"},
 		},
 	}
 
