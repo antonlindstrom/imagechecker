@@ -37,38 +37,34 @@ func ImageURLs(r io.Reader) []string {
 
 	for {
 		tt := z.Next()
-
-		switch {
-		case tt == html.ErrorToken:
+		if tt == html.ErrorToken {
 			return images
-		case tt == html.SelfClosingTagToken:
-			t := z.Token()
-
-			isImg := t.Data == "img"
-			if !isImg {
-				continue
-			}
-
-			image := getImageURL(t)
-			if image == "" {
-				continue
-			}
-
-			images = append(images, image)
 		}
+
+		t := z.Token()
+		if t.Data != "img" {
+			continue
+		}
+
+		image, ok := getImageURL(t)
+		if !ok {
+			continue
+		}
+
+		images = append(images, image)
 	}
 }
 
 // getImageURL checks if the img html.Token contains an src, if that's the
 // case returns the URL.
-func getImageURL(t html.Token) string {
+func getImageURL(t html.Token) (string, bool) {
 	for _, i := range t.Attr {
 		if i.Key == "src" || i.Key == "data-src" {
-			return i.Val
+			return i.Val, true
 		}
 	}
 
-	return ""
+	return "", false
 }
 
 // absoluteImagePath checks if the url to an image already is absolute,
