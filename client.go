@@ -3,6 +3,7 @@ package imagechecker
 import (
 	"io"
 	"net/http"
+	"strings"
 )
 
 // Client contains an HTTP client and a URL parser.
@@ -36,6 +37,10 @@ func New() *Client {
 // DocumentFromURL fetches the body of a URL and returns a document with the
 // links set.
 func (c *Client) DocumentFromURL(url string) (*Document, error) {
+	if strings.HasPrefix(url, "//") {
+		url = "https:" + url
+	}
+
 	resp, err := c.Get(url)
 	if err != nil {
 		return nil, err
