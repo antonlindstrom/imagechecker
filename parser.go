@@ -70,9 +70,15 @@ func getImageURL(t html.Token) (string, bool) {
 // absoluteImagePath checks if the url to an image already is absolute,
 // otherwise returns the absolute one.
 func absoluteImagePath(u, image string) string {
-	if !strings.HasPrefix(image, "http") {
-		image = baseURL(u) + image
+	if strings.HasPrefix(image, "http") {
+		return image
 	}
+
+	if !strings.HasPrefix(image, "/") {
+		image = "/" + image
+	}
+
+	image = baseURL(u) + image
 
 	return image
 }

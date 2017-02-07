@@ -61,6 +61,11 @@ func TestAbsoluteImageURL(t *testing.T) {
 		},
 		{
 			url:   "http://example.com/home",
+			image: "image.jpeg",
+			want:  "http://example.com/image.jpeg",
+		},
+		{
+			url:   "http://example.com/home",
 			image: "http://test.com/image.jpeg",
 			want:  "http://test.com/image.jpeg",
 		},
